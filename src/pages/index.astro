@@ -1,16 +1,706 @@
 ---
-
+/* src/pages/index.astro */
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Le Donjon Maudit</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&display=swap"
+            rel="stylesheet"
+        />
+
+        <style is:global>
+            /* (Tout le CSS reste identique au précédent) */
+            @font-face {
+                font-family: "Crusades";
+                src: url("/fonts/Ozzy II.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+            body {
+                font-family: "MedievalSharp", cursive;
+                background-color: #0c0a09;
+                min-height: 100vh;
+                color: #e7e5e4;
+                overflow-x: hidden;
+            }
+            .bg-layer {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center;
+                z-index: -2;
+                transition: opacity 0.3s ease-in-out;
+                filter: grayscale(100%) brightness(40%) contrast(110%);
+            }
+            #bg-mort {
+                filter: grayscale(20%) brightness(95%) contrast(120%) sepia(30%)
+                    hue-rotate(-40deg) !important;
+            }
+            .vignette-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                pointer-events: none;
+                background: radial-gradient(
+                    circle at center,
+                    rgba(42, 40, 38, 0) 0%,
+                    rgba(12, 10, 9, 0.95) 85%
+                );
+            }
+            .bg-visible {
+                opacity: 1 !important;
+            }
+            .bg-hidden {
+                opacity: 0 !important;
+            }
+            .hidden {
+                display: none !important;
+            }
+            h1,
+            h2,
+            h3,
+            .font-gothic {
+                font-family: "Cinzel", serif;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
+            .font-title {
+                font-family: "Crusades", sans-serif;
+                letter-spacing: 0.05em;
+            }
+            .stone-panel,
+            .modal-content {
+                background-color: rgba(28, 25, 23, 0.9);
+                border: 4px double #57534e;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(4px);
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+                border-color: #a8a29e;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s ease-out forwards;
+            }
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 100;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(5px);
+            }
+            .modal-content {
+                padding: 2rem;
+                border-radius: 0.5rem;
+                width: 90%;
+                max-width: 400px;
+                text-align: center;
+            }
+            input.gothic-input {
+                width: 100%;
+                padding: 0.75rem;
+                margin-bottom: 1rem;
+                background: rgba(0, 0, 0, 0.5);
+                border: 2px solid #57534e;
+                color: #e7e5e4;
+                font-family: "Cinzel", serif;
+            }
+            input.gothic-input:focus {
+                border-color: #d97706;
+                outline: none;
+            }
+            .auth-error {
+                color: #ef4444;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+            /* Styles pour le leaderboard */
+            .leaderboard-list {
+                text-align: left;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            .leaderboard-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem;
+                border-bottom: 1px solid #57534e;
+            }
+            .leaderboard-rank {
+                color: #d97706;
+                font-weight: bold;
+                margin-right: 1rem;
+            }
+        </style>
+    </head>
+    <body class="p-4 md:p-8 flex flex-col items-center justify-center">
+        <div
+            id="bg-door"
+            class="bg-layer bg-visible"
+            style="background-image: url('/images/porte.png');"
+        >
+        </div>
+        <div
+            id="bg-hall"
+            class="bg-layer bg-hidden"
+            style="background-image: url('/images/hall.png');"
+        >
+        </div>
+        <div
+            id="bg-mort"
+            class="bg-layer bg-hidden"
+            style="background-image: url('/images/mort.png');"
+        >
+        </div>
+        <div class="vignette-overlay"></div>
+        <div
+            id="auth-widget"
+            class="fixed top-4 right-4 z-50 stone-panel p-2 rounded cursor-pointer hover:border-amber-600 transition-colors flex items-center gap-2"
+        >
+            <span
+                id="auth-status-text"
+                class="font-gothic text-sm text-amber-500">Login</span
+            >
+        </div>
+
+        <div id="login-modal" class="modal-overlay hidden">
+            <div class="modal-content animate-fade-in">
+                <h3 class="text-2xl mb-6 text-amber-600">Connexion</h3><div
+                    id="login-error"
+                    class="auth-error"
+                >
+                </div><form id="login-form">
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Pseudo"
+                        class="gothic-input"
+                        required
+                    /><input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe"
+                        class="gothic-input"
+                        required
+                    /><button
+                        type="submit"
+                        class="font-gothic px-6 py-2 bg-amber-900/80 border-2 border-amber-700 text-amber-100 hover:bg-amber-800 w-full mb-4"
+                        >Se connecter</button
+                    >
+                </form><p class="text-sm text-stone-400">
+                    Pas de compte ? <button
+                        id="btn-show-register"
+                        class="text-amber-500 hover:underline"
+                        >S'inscrire</button
+                    >
+                </p><button
+                    class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
+                    >X</button
+                >
+            </div>
+        </div>
+        <div id="register-modal" class="modal-overlay hidden">
+            <div class="modal-content animate-fade-in">
+                <h3 class="text-2xl mb-6 text-amber-600">Inscription</h3><div
+                    id="register-error"
+                    class="auth-error"
+                >
+                </div><form id="register-form">
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Pseudo"
+                        class="gothic-input"
+                        required
+                    /><input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        class="gothic-input"
+                        required
+                    /><input
+                        type="password"
+                        name="password"
+                        placeholder="Mot de passe (min 6 chars)"
+                        class="gothic-input"
+                        required
+                        minlength="6"
+                    /><button
+                        type="submit"
+                        class="font-gothic px-6 py-2 bg-amber-900/80 border-2 border-amber-700 text-amber-100 hover:bg-amber-800 w-full mb-4"
+                        >Créer le compte</button
+                    >
+                </form><p class="text-sm text-stone-400">
+                    Déjà un compte ? <button
+                        id="btn-show-login"
+                        class="text-amber-500 hover:underline"
+                        >Se connecter</button
+                    >
+                </p><button
+                    class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
+                    >X</button
+                >
+            </div>
+        </div>
+
+        <div id="leaderboard-modal" class="modal-overlay hidden">
+            <div
+                class="modal-content animate-fade-in"
+                style="max-width: 500px;"
+            >
+                <h3
+                    class="text-2xl mb-6 text-amber-600 font-title tracking-wider"
+                >
+                    Tableau d'Honneur
+                </h3>
+                <div id="leaderboard-loading" class="text-stone-400">
+                    Chargement des âmes...
+                </div>
+                <div
+                    id="leaderboard-container"
+                    class="leaderboard-list hidden font-gothic"
+                >
+                </div>
+                <button
+                    class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
+                    >X</button
+                >
+            </div>
+        </div>
+
+        <game-client></game-client>
+
+        <script>
+            import { Game } from "../game/Game.js";
+            import { connectGameToUI } from "../gameConnector.js";
+            import { uiStore } from "../store.js";
+            import {
+                authStore,
+                initAuth,
+                loginSuccess,
+                logout,
+            } from "../authStore.js";
+            // Import des nouvelles fonctions d'API
+            import {
+                loginUser,
+                registerUser,
+                saveScoreApi,
+                getLeaderboardApi,
+            } from "../api.js";
+
+            // --- INITIALISATION ---
+            const game = new Game();
+            connectGameToUI();
+            initAuth();
+            console.log("--- DÉMARRAGE DU DONJON ---");
+            game.init();
+
+            window.game = game;
+            window.uiStore = uiStore;
+            window.authStore = authStore;
+
+            // --- FONCTION CREATE CARD HTML (Inchangée - Je la compresse pour gagner de la place) ---
+            function createCardHTML(c) {
+                let i = "❓",
+                    s = "",
+                    bc = "border-stone-600 bg-stone-900/80",
+                    ic = "text-stone-400",
+                    vc = "text-stone-100",
+                    v = c.effects[0].value;
+                switch (c.type) {
+                    case "monster":
+                        i = "👹";
+                        bc =
+                            "border-red-900/60 bg-gradient-to-b from-stone-900/90 to-red-950/90";
+                        ic = "text-red-700";
+                        vc = "text-red-500";
+                        s = `ATK <span class="font-gothic text-3xl ${vc}">${v}</span>`;
+                        break;
+                    case "weapon":
+                        i = "⚔️";
+                        bc =
+                            "border-slate-700 bg-gradient-to-b from-stone-900/90 to-slate-900/90";
+                        ic = "text-slate-400";
+                        vc = "text-blue-400";
+                        s = `PWR <span class="font-gothic text-3xl ${vc}">${v.power}</span>`;
+                        break;
+                    case "potion":
+                        i = "⚗️";
+                        bc =
+                            "border-emerald-900/60 bg-gradient-to-b from-stone-900/90 to-emerald-950/90";
+                        ic = "text-emerald-600";
+                        vc = "text-emerald-400";
+                        s = `HEAL <span class="font-gothic text-3xl ${vc}">${v}</span>`;
+                        break;
+                }
+                return `<div class="${bc} w-40 h-60 border-[3px] rounded-md flex flex-col items-center p-2 transition-all duration-300 cursor-pointer shadow-lg relative group select-none backdrop-blur-sm"><div class="text-sm font-bold text-center h-10 flex items-center justify-center w-full border-b border-white/10 font-gothic text-stone-300">${c.name}</div><div class="flex-grow flex items-center justify-center text-6xl drop-shadow-md ${ic} opacity-90 group-hover:scale-110 transition-transform">${i}</div><div class="w-full border-t border-white/10 pt-2 text-center text-xs uppercase tracking-widest text-stone-400">${s}</div><div class="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors rounded-md"></div></div>`;
+            }
+
+            // --- LOGIQUE UI (Modales, Auth, Leaderboard) ---
+            const authWidget = document.getElementById("auth-widget");
+            const authStatusText = document.getElementById("auth-status-text");
+            const loginModal = document.getElementById("login-modal");
+            const registerModal = document.getElementById("register-modal");
+            const leaderboardModal =
+                document.getElementById("leaderboardModal"); // Correction ID
+            const loginForm = document.getElementById("login-form");
+            const registerForm = document.getElementById("register-form");
+            const loginError = document.getElementById("login-error");
+            const registerError = document.getElementById("register-error");
+            const leaderboardContainer = document.getElementById(
+                "leaderboard-container",
+            );
+            const leaderboardLoading = document.getElementById(
+                "leaderboard-loading",
+            );
+
+            // Gestion des modales
+            window.closeModals = () => {
+                loginModal.classList.add("hidden");
+                registerModal.classList.add("hidden");
+                document
+                    .getElementById("leaderboard-modal")
+                    .classList.add("hidden");
+            };
+            window.showLoginModal = () => {
+                window.closeModals();
+                loginModal.classList.remove("hidden");
+                loginError.textContent = "";
+            };
+            window.showRegisterModal = () => {
+                window.closeModals();
+                registerModal.classList.remove("hidden");
+                registerError.textContent = "";
+            };
+
+            // NOUVEAU : Afficher le leaderboard
+            window.showLeaderboardModal = async () => {
+                window.closeModals();
+                document
+                    .getElementById("leaderboard-modal")
+                    .classList.remove("hidden");
+                leaderboardLoading.classList.remove("hidden");
+                leaderboardContainer.classList.add("hidden");
+
+                try {
+                    const scores = await getLeaderboardApi(10);
+                    leaderboardContainer.innerHTML = scores
+                        .map(
+                            (score, index) => `
+                        <div class="leaderboard-item">
+                            <div><span class="leaderboard-rank">#${index + 1}</span> ${score.owner.username}</div>
+                            <div class="text-amber-500">${score.score_value} pts <span class="text-stone-500 text-xs">(Salle ${score.level_reached})</span></div>
+                        </div>
+                    `,
+                        )
+                        .join("");
+                } catch (e) {
+                    leaderboardContainer.innerHTML = `<div class="text-red-500">Erreur de chargement.</div>`;
+                } finally {
+                    leaderboardLoading.classList.add("hidden");
+                    leaderboardContainer.classList.remove("hidden");
+                }
+            };
+
+            // Event Listeners UI
+            authWidget.addEventListener("click", () => {
+                authStore.get().user
+                    ? confirm("Se déconnecter ?") && logout()
+                    : window.showLoginModal();
+            });
+            document
+                .querySelectorAll(".modal-close")
+                .forEach((btn) =>
+                    btn.addEventListener("click", window.closeModals),
+                );
+            document
+                .getElementById("btn-show-register")
+                .addEventListener("click", window.showRegisterModal);
+            document
+                .getElementById("btn-show-login")
+                .addEventListener("click", window.showLoginModal);
+
+            // Forms Auth (Inchangé)
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                loginError.textContent = "Connexion...";
+                const fd = new FormData(loginForm);
+                try {
+                    const d = await loginUser(
+                        fd.get("username"),
+                        fd.get("password"),
+                    );
+                    loginSuccess(d.access_token, fd.get("username"));
+                    window.closeModals();
+                    loginForm.reset();
+                } catch (err) {
+                    loginError.textContent = err.message;
+                }
+            });
+            registerForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                registerError.textContent = "Création...";
+                const fd = new FormData(registerForm);
+                try {
+                    await registerUser(
+                        fd.get("username"),
+                        fd.get("email"),
+                        fd.get("password"),
+                    );
+                    const d = await loginUser(
+                        fd.get("username"),
+                        fd.get("password"),
+                    );
+                    loginSuccess(d.access_token, fd.get("username"));
+                    window.closeModals();
+                    registerForm.reset();
+                    alert("Compte créé !");
+                } catch (err) {
+                    registerError.textContent = err.message;
+                }
+            });
+
+            authStore.subscribe((state) => {
+                if (state.user) {
+                    authStatusText.textContent = `👤 ${state.user.username}`;
+                    authStatusText.classList.replace(
+                        "text-amber-500",
+                        "text-emerald-400",
+                    );
+                } else {
+                    authStatusText.textContent = `Login / Inscription`;
+                    authStatusText.classList.replace(
+                        "text-emerald-400",
+                        "text-amber-500",
+                    );
+                }
+            });
+
+            // --- GAME CLIENT ---
+            class GameClient extends HTMLElement {
+                constructor() {
+                    super();
+                    this.bgDoor = document.getElementById("bg-door");
+                    this.bgHall = document.getElementById("bg-hall");
+                    this.bgMort = document.getElementById("bg-mort");
+                    this.hasSavedScore = false; // Pour éviter de sauvegarder 50 fois le même score
+
+                    this.unsubscribeUI = uiStore.subscribe(($store) => {
+                        this.updateBackground($store.currentScreen);
+                        this.handleAutoSave($store, authStore.get()); // NOUVEAU : Check sauvegarde auto
+                        this.render($store, authStore.get());
+                    });
+                    this.unsubscribeAuth = authStore.subscribe(($auth) => {
+                        // Si on se connecte sur l'écran de game over, on tente une sauvegarde
+                        if (uiStore.get().currentScreen === "GameOver")
+                            this.handleAutoSave(uiStore.get(), $auth);
+                        this.render(uiStore.get(), $auth);
+                    });
+                }
+
+                disconnectedCallback() {
+                    this.unsubscribeUI();
+                    this.unsubscribeAuth();
+                }
+
+                // NOUVEAU : Gestion de la sauvegarde automatique
+                async handleAutoSave($store, $auth) {
+                    // Si c'est Game Over, qu'on est connecté, et qu'on n'a pas encore sauvegardé cette partie
+                    if (
+                        $store.currentScreen === "GameOver" &&
+                        $auth.user &&
+                        !this.hasSavedScore &&
+                        $store.finalScore > 0
+                    ) {
+                        this.hasSavedScore = true; // On marque comme sauvegardé tout de suite
+                        console.log(
+                            "Tentative de sauvegarde automatique du score...",
+                        );
+                        try {
+                            await saveScoreApi($store.finalScore, $store.level);
+                            console.log("Score sauvegardé avec succès !");
+                            // On force un re-rendu pour afficher le message de succès
+                            this.render($store, $auth);
+                        } catch (e) {
+                            console.error("Erreur sauvegarde auto :", e);
+                            this.hasSavedScore = false; // On autorise à retenter si ça a échoué
+                        }
+                    }
+                    // Reset du flag quand on quitte l'écran de game over
+                    if ($store.currentScreen !== "GameOver") {
+                        this.hasSavedScore = false;
+                    }
+                }
+
+                updateBackground(s) {
+                    const v = (e, b) => {
+                        e.classList.toggle("bg-visible", b);
+                        e.classList.toggle("bg-hidden", !b);
+                    };
+                    if (s === "GameOver") {
+                        v(this.bgDoor, 0);
+                        v(this.bgHall, 0);
+                        v(this.bgMort, 1);
+                    } else if (["MainMenu", "ClassSelection"].includes(s)) {
+                        v(this.bgDoor, 1);
+                        v(this.bgHall, 0);
+                        v(this.bgMort, 0);
+                    } else {
+                        v(this.bgDoor, 0);
+                        v(this.bgHall, 1);
+                        v(this.bgMort, 0);
+                    }
+                }
+
+                render($store, $auth) {
+                    // ... (constantes de style inchangées) ...
+                    const showMainMenu =
+                            $store.currentScreen === "MainMenu" ? "" : "hidden",
+                        showClassSelect =
+                            $store.currentScreen === "ClassSelection"
+                                ? ""
+                                : "hidden",
+                        showGameOver =
+                            $store.currentScreen === "GameOver" ? "" : "hidden",
+                        showGameContainer = ![
+                            "MainMenu",
+                            "ClassSelection",
+                            "GameOver",
+                        ].includes($store.currentScreen)
+                            ? ""
+                            : "hidden";
+                    const btnStyle =
+                        "font-gothic px-8 py-3 bg-stone-800/90 border-2 border-stone-600 text-stone-300 text-xl hover:bg-stone-700 hover:border-stone-400 hover:text-white transition-all shadow-lg active:transform active:scale-95 cursor-pointer backdrop-blur-sm";
+                    const btnDanger =
+                        "font-gothic px-6 py-2 bg-red-950/80 border-2 border-red-800 text-red-200 hover:bg-red-900 hover:text-white transition-all cursor-pointer backdrop-blur-sm";
+                    const btnSafe =
+                        "font-gothic px-6 py-2 bg-emerald-950/80 border-2 border-emerald-800 text-emerald-200 hover:bg-emerald-900 hover:text-white transition-all cursor-pointer backdrop-blur-sm";
+
+                    // Logique Game Over mise à jour
+                    let gameOverHtml = "";
+                    if ($auth.user) {
+                        gameOverHtml = this.hasSavedScore
+                            ? `<p class="text-emerald-500 mb-4 font-gothic text-sm animate-pulse">Score enregistré dans les annales !</p>`
+                            : `<p class="text-stone-500 mb-4 font-gothic text-sm">Sauvegarde en cours...</p>`;
+                    } else {
+                        gameOverHtml = `<p class="text-amber-500 mb-4 font-gothic text-sm">Connectez-vous pour sauvegarder !</p>
+                            <div class="flex gap-4 justify-center"><button class="${btnStyle} border-amber-600 text-amber-200" onclick="window.showLoginModal()">Se connecter</button></div>`;
+                    }
+
+                    this.innerHTML = `
+                    <div id="main-menu-screen" class="${showMainMenu} text-center p-8 max-w-2xl mx-auto mt-10">
+                        <h1 class="font-title text-7xl md:text-8xl mb-4 text-stone-200 drop-shadow-2xl tracking-wide">SCOUNDREL</h1>
+                        <div class="w-32 h-1 bg-stone-700 mx-auto mb-12"></div>
+                        <p class="text-xl text-stone-300 mb-12 italic drop-shadow-md">"Oserez-vous franchir le seuil ?"</p>
+                        <div class="flex flex-col gap-4 items-center">
+                            <button class="${btnStyle} text-2xl px-12 py-4 border-4 double" onclick="window.game.currentState.onStartGame()">Entrer dans le Donjon</button>
+                            <button class="${btnStyle} text-lg px-8 py-2 border-amber-800 text-amber-500" onclick="window.showLeaderboardModal()">Voir le Classement 🏆</button>
+                        </div>
+                    </div>
+
+                    <div id="class-selection-screen" class="${showClassSelect} text-center p-8 w-full max-w-4xl">
+                        <h1 class="text-4xl mb-8 text-stone-200 font-gothic drop-shadow-lg">Choisissez votre Destinée</h1>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">${$store.classChoices.map((c) => `<button class="p-6 bg-stone-900/80 border-2 border-stone-700 text-left hover:border-amber-600 hover:bg-stone-800/90 transition-all group relative overflow-hidden cursor-pointer backdrop-blur-md" onclick="window.game.currentState.onSelectClass('${c.id}')"><div class="absolute top-0 left-0 w-1 h-full bg-stone-700 group-hover:bg-amber-600 transition-colors"></div><div class="pl-4"><div class="text-2xl font-gothic text-amber-500 mb-2">${c.name}</div><div class="text-stone-300 text-sm leading-relaxed">${c.description}</div></div></button>`).join("")}</div>
+                    </div>
+
+                    <div id="game-over-screen" class="${showGameOver} fixed inset-0 z-50 flex flex-col items-center justify-center text-center animate-fade-in backdrop-blur-sm">
+                        <h2 class="font-title text-8xl md:text-9xl mb-4 text-red-700 drop-shadow-[0_0_25px_rgba(185,28,28,0.6)] tracking-widest scale-y-110">MORT</h2>
+                        <p class="text-3xl mb-8 text-stone-500 font-gothic drop-shadow-md">Votre âme rejoint le néant.</p>
+                        <div class="mb-8 p-6 border-2 double border-stone-800 bg-stone-950/80 rounded-lg shadow-2xl backdrop-blur-md">
+                            <span class="text-stone-600 uppercase text-sm tracking-[0.3em]">Score Final</span><br>
+                            <span class="text-5xl text-amber-600 font-title mt-2 block">${$store.finalScore}</span>
+                        </div>
+                        ${gameOverHtml}
+                        <button class="${btnStyle} mt-8" onclick="window.game.currentState.onRestartGame()">Tenter une nouvelle vie</button>
+                    </div>
+                    
+                    <div id="game-container" class="${showGameContainer} w-full max-w-5xl">
+                        <div class="stone-panel p-4 mb-8 flex flex-col md:flex-row justify-between items-center rounded-sm border-y-4 border-x-0 md:border-4 md:rounded-lg gap-4">
+                            <div class="flex items-center gap-6"><div class="text-center"><div class="text-xs text-stone-500 uppercase tracking-wider">Santé</div><div class="text-3xl font-gothic text-red-500 drop-shadow-sm">${$store.health} <span class="text-stone-600 text-lg">/ ${$store.maxHealth}</span></div></div><div class="w-px h-10 bg-stone-700 hidden md:block"></div><div class="text-center"><div class="text-xs text-stone-500 uppercase tracking-wider">Arme</div><div class="text-xl font-gothic ${$store.weapon ? "text-blue-400" : "text-stone-600"}">${$store.weapon ? `${$store.weapon.name} (${$store.weapon.power})` : "Mains nues"}</div></div></div>
+                            <div class="flex gap-6"><div class="text-right"><div class="text-xs text-stone-500 uppercase">Score</div><div class="text-2xl font-gothic text-amber-500">${$store.score}</div></div><div class="text-right"><div class="text-xs text-stone-500 uppercase">Salle</div><div class="text-2xl font-gothic text-purple-400">${$store.level}</div></div></div>
+                        </div>
+                        <div class="min-h-[350px] flex items-center justify-center"><div class="flex flex-wrap justify-center gap-6 perspective-1000">${this.renderRoom($store)}</div></div>
+                        <div class="mt-12 h-24 flex items-center justify-center gap-4">${this.renderActions($store, btnDanger, btnSafe)}</div>
+                    </div>
+                `;
+                }
+                // (renderRoom et renderActions sont compressés mais présents)
+                renderRoom($store) {
+                    if (
+                        $store.currentScreen === "WeaponDecision" &&
+                        !$store.weaponDecision
+                    )
+                        return "";
+                    if ($store.currentScreen === "RoomDecision") {
+                        return $store.roomCards
+                            .map(
+                                (c) =>
+                                    `<div class="opacity-40 grayscale scale-90 pointer-events-none">${createCardHTML(c)}</div>`,
+                            )
+                            .join("");
+                    }
+                    if ($store.currentScreen === "RoomPlaying") {
+                        return $store.roomCards
+                            .map((card, index) => {
+                                return `<div class="card-hover" onclick="window.game.currentState.onSelectCard(window.game.roomAvailableCards[${index}])">${createCardHTML(card)}</div>`;
+                            })
+                            .join("");
+                    }
+                    if ($store.currentScreen === "WeaponDecision") {
+                        return `<div class="flex flex-col items-center animate-pulse"><div class="text-red-500 font-gothic text-xl mb-4 tracking-widest drop-shadow-md">CIBLE VERROUILLÉE</div>${createCardHTML($store.weaponDecision.monster)}</div>`;
+                    }
+                    return "";
+                }
+                renderActions($store, btnDanger, btnSafe) {
+                    if ($store.currentScreen === "RoomDecision") {
+                        const fleeClass = $store.isFleeDisabled
+                            ? "opacity-50 cursor-not-allowed bg-stone-800 text-stone-600 border-stone-700"
+                            : "bg-blue-950/80 border-blue-800 text-blue-200 hover:bg-blue-900 hover:text-white hover:border-blue-500 cursor-pointer backdrop-blur-sm";
+                        return `<button class="font-gothic px-8 py-3 border-2 text-lg rounded transition-all ${fleeClass}" ${$store.isFleeDisabled ? "disabled" : ""} onclick="window.game.currentState.onFlee()">${$store.isFleeDisabled ? "Fuite Impossible" : "Fuir la salle"}</button><button class="font-gothic px-8 py-3 bg-red-950/80 border-2 border-red-800 text-red-100 text-lg rounded hover:bg-red-900 hover:border-red-500 hover:text-white hover:scale-105 transition-all shadow-lg shadow-red-900/20 cursor-pointer backdrop-blur-sm" onclick="window.game.currentState.onFight()">COMBATTRE</button>`;
+                    }
+                    if ($store.currentScreen === "RoomPlaying") {
+                        return `<div class="text-xl text-stone-400 font-gothic border-b-2 border-stone-800 pb-2 px-8 drop-shadow-md bg-black/40 rounded">Choisissez encore <span class="text-stone-200 font-bold">${$store.roomPicksLeft}</span> carte${$store.roomPicksLeft > 1 ? "s" : ""}</div>`;
+                    }
+                    if (
+                        $store.currentScreen === "WeaponDecision" &&
+                        $store.weaponDecision
+                    ) {
+                        return `<div class="flex flex-col items-center gap-4 p-6 stone-panel rounded-lg"><p class="text-lg text-stone-300">Utiliser <span class="text-blue-400 font-bold">${$store.weaponDecision.weapon.name}</span> ?</p><div class="flex gap-4"><button class="${btnSafe}" onclick="window.game.currentState.onConfirmWeaponUse(true)">OUI (Attaque)</button><button class="${btnDanger}" onclick="window.game.currentState.onConfirmWeaponUse(false)">NON (Mains nues)</button></div></div>`;
+                    }
+                    return "";
+                }
+            }
+
+            customElements.define("game-client", GameClient);
+        </script>
+    </body>
 </html>

@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]   # Le serveur pour faire tourner FastAPI
+sqlalchemy          # L'ORM pour parler à la BDD proprement
+aiomysql            # Le driver async pour MySQL
+pydantic            # Pour la validation des données
+pydantic-settings   # Pour gérer la configuration (.env)
+passlib[bcrypt]     # Pour hasher les mots de passe
+python-jose[cryptography] # Pour gérer les tokens JWT
+python-multipart    # Nécessaire pour le formulaire de login standard
+email-validator

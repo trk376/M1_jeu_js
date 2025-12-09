@@ -1,5 +1,12 @@
+// tsconfig.json
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "compilerOptions": {
+    // 1. On définit la racine du projet
+    "baseUrl": ".",
+    // 2. On définit l'alias
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  }
 }
