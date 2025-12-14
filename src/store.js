@@ -5,8 +5,8 @@ export const uiStore = map({
 
     health: 0,
     maxHealth: 20,
-    souls: 0, // <-- Le compteur d'âmes
-    unlockedClasses: [], // <-- Pour le shop
+    souls: 0,
+    unlockedClasses: [],
 
     score: 0,
     level: 1,

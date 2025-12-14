@@ -1,8 +1,15 @@
-// src/api.js
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
+import { logout } from "./authStore.js";
 
 async function handleResponse(response) {
     if (!response.ok) {
+        if (response.status === 401) {
+            console.warn("[API] Session expirée ou invalide. Déconnexion forcée.");
+            logout();
+            window.location.reload();
+            return null;
+        }
+
         const errorData = await response.json().catch(() => ({}));
         console.error(`[API ERROR]`, errorData);
         throw new Error(errorData.detail || `Erreur ${response.status}`);
@@ -70,7 +77,6 @@ export async function getMyProgressApi() {
     return data;
 }
 
-// --- LE POINT CRITIQUE ---
 export async function claimRewardApi(score, level) {
     console.log(`🚀 [API] ENVOI REWARD : Score=${score}, Level=${level}`);
 

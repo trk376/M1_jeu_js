@@ -1,0 +1,54 @@
+<div
+    id="level-overlay"
+    class="fixed inset-x-0 top-0 z-40 pointer-events-none flex flex-col items-center pt-24 opacity-0 transition-all duration-1000"
+>
+    <h2
+        id="level-title"
+        class="font-title text-5xl md:text-7xl text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.6)] tracking-widest uppercase"
+    >
+        SALLE 1
+    </h2>
+    <p
+        id="level-subtitle"
+        class="text-stone-300 font-gothic text-xl mt-2 tracking-wide drop-shadow-md"
+    >
+        Le donjon s'éveille...
+    </p>
+</div>
+
+<style>
+    .level-visible {
+        opacity: 1 !important;
+        transform: translateY(10px);
+    }
+</style>
+
+<script>
+    import { gameEvents } from "../../utils/EventBus.js";
+
+    const levelOverlay = document.getElementById("level-overlay");
+    const levelTitle = document.getElementById("level-title");
+    const levelSubtitle = document.getElementById("level-subtitle");
+
+    const flavorTexts = [
+        "Les ombres s'allongent...",
+        "Le danger grandit...",
+        "Pas de retour en arrière...",
+        "La mort vous guette...",
+        "Silence, mortel...",
+    ];
+
+    gameEvents.subscribe("loopChanged", (data) => {
+        const newLevel = data.level;
+        if (levelTitle && levelSubtitle && levelOverlay) {
+            levelTitle.textContent = `SALLE ${newLevel}`;
+            levelSubtitle.textContent =
+                flavorTexts[Math.floor(Math.random() * flavorTexts.length)];
+
+            levelOverlay.classList.add("level-visible");
+            setTimeout(() => {
+                levelOverlay.classList.remove("level-visible");
+            }, 2500);
+        }
+    });
+</script>

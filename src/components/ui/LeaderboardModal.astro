@@ -1,0 +1,57 @@
+<div id="leaderboard-modal" class="modal-overlay hidden">
+    <div class="modal-content animate-fade-in" style="max-width: 500px;">
+        <h3 class="text-2xl mb-6 text-amber-600 font-title tracking-wider">
+            Tableau d'Honneur
+        </h3>
+        <div id="leaderboard-loading" class="text-stone-400">
+            Chargement des âmes...
+        </div>
+        <div
+            id="leaderboard-container"
+            class="leaderboard-list hidden font-gothic"
+        >
+        </div>
+        <button
+            class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
+            >X</button
+        >
+    </div>
+</div>
+
+<script>
+    import { getLeaderboardApi } from "../../api.js";
+
+    const modal = document.getElementById("leaderboard-modal");
+    const container = document.getElementById("leaderboard-container");
+    const loading = document.getElementById("leaderboard-loading");
+
+    window.showLeaderboardModal = async () => {
+        if (window.closeModals) window.closeModals();
+        modal.classList.remove("hidden");
+        loading.classList.remove("hidden");
+        container.classList.add("hidden");
+
+        try {
+            const scores = await getLeaderboardApi(10);
+            container.innerHTML = scores
+                .map(
+                    (score, index) => `
+                <div class="leaderboard-item">
+                    <div><span class="leaderboard-rank">#${index + 1}</span> ${score.owner.username}</div>
+                    <div class="text-amber-500">${score.score_value} pts <span class="text-stone-500 text-xs">(Salle ${score.level_reached})</span></div>
+                </div>
+            `,
+                )
+                .join("");
+        } catch (e) {
+            container.innerHTML = `<div class="text-red-500">Erreur de chargement.</div>`;
+        } finally {
+            loading.classList.add("hidden");
+            container.classList.remove("hidden");
+        }
+    };
+
+    modal.querySelector(".modal-close").addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+</script>

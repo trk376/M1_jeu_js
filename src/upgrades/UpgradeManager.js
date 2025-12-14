@@ -1,34 +1,40 @@
 import { passiveFactory } from '~/passives/PassiveFactory.js';
 import { gameEvents } from '~/utils/EventBus.js';
 
- 
- 
-
- 
 const upgradeData = [
-  { 
-    "id": "UPG_CLASS_TANK", "name": "Classe : Tank", 
-    "description": "+50 PV Max. Tuer un monstre avec une attaque égale à la puissance de votre arme ne l'endommage pas (1/salle).", 
-    "type": "CLASS_PASSIVE", "data": { "passiveId": "TANK" } 
+  {
+    "id": "UPG_CLASS_TANK",
+    "refId": "tank",
+    "name": "Classe : Tank",
+    "description": "+50 PV Max. Tuer un monstre avec une attaque égale à la puissance de votre arme ne l'endommage pas (1/salle).",
+    "type": "CLASS_PASSIVE",
+    "data": { "passiveId": "TANK" }
   },
-  { 
-    "id": "UPG_CLASS_WARLOCK", "name": "Classe : Warlock", 
-    "description": "Au début de chaque salle, perdez 3 PV et piochez 1 carte supplémentaire (elle est défaussée à la fin).", 
-    "type": "CLASS_PASSIVE", "data": { "passiveId": "WARLOCK" } 
+  {
+    "id": "UPG_CLASS_WARLOCK",
+    "refId": "warlock",
+    "name": "Classe : Warlock",
+    "description": "Au début de chaque salle, perdez 3 PV et piochez 1 carte supplémentaire (elle est défaussée à la fin).",
+    "type": "CLASS_PASSIVE",
+    "data": { "passiveId": "WARLOCK" }
   },
-  { 
-    "id": "UPG_CLASS_BERSERK", "name": "Classe : Berserk", 
-    "description": "Inflige +1 dégât supplémentaire lorsque vous avez moins de 50% de vos PV.", 
-    "type": "CLASS_PASSIVE", "data": { "passiveId": "BERSERK" } 
+  {
+    "id": "UPG_CLASS_BERSERK",
+    "refId": "berserk",
+    "name": "Classe : Berserk",
+    "description": "Inflige +1 dégât supplémentaire lorsque vous avez moins de 50% de vos PV.",
+    "type": "CLASS_PASSIVE",
+    "data": { "passiveId": "BERSERK" }
   },
-  { 
-    "id": "UPG_CLASS_HUNTER", "name": "Classe : Hunter", 
-    "description": "Vous ne pouvez plus fuir les salles. (Logique de re-pioche à implémenter).", 
-    "type": "CLASS_PASSIVE", "data": { "passiveId": "HUNTER" } 
+  {
+    "id": "UPG_CLASS_HUNTER",
+    "refId": "hunter",
+    "name": "Classe : Hunter",
+    "description": "Vous ne pouvez plus fuir les salles. (Logique de re-pioche à implémenter).",
+    "type": "CLASS_PASSIVE",
+    "data": { "passiveId": "HUNTER" }
   }
-   
 ];
- 
 
 class UpgradeManager {
   constructor() {
@@ -37,22 +43,17 @@ class UpgradeManager {
     );
   }
 
-
-   
   getClassUpgrades() {
-     
     const allUpgrades = Array.from(this.allUpgradeDefinitions.values());
-    
-     
     return allUpgrades.filter(upgrade => upgrade.type === "CLASS_PASSIVE");
   }
 
-   
-  
   selectUpgrade(player, upgradeId, game) {
+    if (!upgradeId) return;
+
     const upgradeDef = this.allUpgradeDefinitions.get(upgradeId);
     if (!upgradeDef || player.acquiredUpgradeIds.has(upgradeId)) {
-      return; 
+      return;
     }
 
     switch (upgradeDef.type) {
@@ -62,11 +63,8 @@ class UpgradeManager {
           player.addPassive(passive, upgradeId);
         }
         break;
-      
-       
     }
   }
 }
 
- 
 export const upgradeManager = new UpgradeManager();

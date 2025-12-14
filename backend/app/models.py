@@ -3,7 +3,6 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database import Base
 
-# NOUVEAU : On définit les âmes à 0 par défaut
 DEFAULT_PLAYER_PROGRESSION = {
     "max_health": 20,
     "souls": 0,

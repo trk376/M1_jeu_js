@@ -1,0 +1,92 @@
+<div id="register-modal" class="modal-overlay hidden">
+    <div class="modal-content animate-fade-in">
+        <h3 class="text-2xl mb-6 text-amber-600">Inscription</h3>
+        <div id="register-error" class="auth-error"></div>
+        <form id="register-form">
+            <input
+                type="text"
+                name="username"
+                placeholder="Pseudo"
+                class="gothic-input"
+                required
+            />
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                class="gothic-input"
+                required
+            />
+            <input
+                type="password"
+                name="password"
+                placeholder="Mot de passe (min 6 chars)"
+                class="gothic-input"
+                required
+                minlength="6"
+            />
+            <button
+                type="submit"
+                class="font-gothic px-6 py-2 bg-amber-900/80 border-2 border-amber-700 text-amber-100 hover:bg-amber-800 w-full mb-4"
+                >Créer le compte</button
+            >
+        </form>
+        <p class="text-sm text-stone-400">
+            Déjà un compte ? <button
+                id="btn-show-login"
+                class="text-amber-500 hover:underline">Se connecter</button
+            >
+        </p>
+        <button
+            class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
+            >X</button
+        >
+    </div>
+</div>
+
+<script>
+    import { registerUser, loginUser } from "../../api.js";
+    import { loginSuccess } from "../../authStore.js";
+
+    const modal = document.getElementById("register-modal");
+    const form = document.getElementById("register-form");
+    const errorMsg = document.getElementById("register-error");
+
+    window.showRegisterModal = () => {
+        if (window.closeModals) window.closeModals();
+        modal.classList.remove("hidden");
+        errorMsg.textContent = "";
+    };
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMsg.textContent = "Création...";
+        const formData = new FormData(form);
+        try {
+            await registerUser(
+                formData.get("username"),
+                formData.get("email"),
+                formData.get("password"),
+            );
+            const data = await loginUser(
+                formData.get("username"),
+                formData.get("password"),
+            );
+            loginSuccess(data.access_token, formData.get("username"));
+            window.closeModals();
+            if (window.loadPlayerProgress) await window.loadPlayerProgress();
+            form.reset();
+            alert("Bienvenue !");
+        } catch (error) {
+            errorMsg.textContent = error.message;
+        }
+    });
+
+    document.getElementById("btn-show-login").addEventListener("click", () => {
+        if (window.showLoginModal) window.showLoginModal();
+    });
+
+    modal
+        .querySelector(".modal-close")
+        .addEventListener("click", () => modal.classList.add("hidden"));
+</script>

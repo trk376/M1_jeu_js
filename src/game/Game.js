@@ -22,7 +22,6 @@ export class Game {
     this.permanentMaxHealth = 20;
   }
 
-  // FIX: Fonction requise par index.astro
   setPermanentMaxHealth(value) {
     console.log(`[Game] PV Max synchronisés : ${value}`);
     this.permanentMaxHealth = value;
@@ -40,7 +39,6 @@ export class Game {
     this.player = new Player();
     this.deck = new Deck();
 
-    // Application du bonus de santé acheté
     if (this.permanentMaxHealth > 20) {
       this.player.setMaxHealth(this.permanentMaxHealth);
       this.player.health = this.permanentMaxHealth;

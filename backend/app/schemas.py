@@ -8,7 +8,7 @@ class UserBase(BaseModel):
 
 class PlayerProgression(BaseModel):
     max_health: int = 20
-    souls: int = 0  # <--- Ajouté
+    souls: int = 0  
     unlocked_classes: List[str] = []
 
 class UserCreate(UserBase):
@@ -42,7 +42,6 @@ class ScoreOut(BaseModel):
     class Config:
         from_attributes = True
 
-# --- POUR LE SYSTÈME DE REWARD ---
 class RewardInput(BaseModel):
     score: int
     level: int
@@ -52,6 +51,5 @@ class RewardOut(BaseModel):
     total_souls: int
     message: str
 
-# --- POUR LE SHOP (Achat de Classe) ---
 class BuyClassInput(BaseModel):
     class_id: str
