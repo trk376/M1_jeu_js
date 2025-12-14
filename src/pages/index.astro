@@ -16,7 +16,7 @@
         />
 
         <style is:global>
-            /* (Tout le CSS reste identique au précédent) */
+            /* --- IMPORTATION MANUELLE DE LA POLICE CRUSADES --- */
             @font-face {
                 font-family: "Crusades";
                 src: url("/fonts/Ozzy II.ttf") format("truetype");
@@ -24,6 +24,8 @@
                 font-style: normal;
                 font-display: swap;
             }
+
+            /* --- CONFIGURATION DU STYLE GLOBAL --- */
             body {
                 font-family: "MedievalSharp", cursive;
                 background-color: #0c0a09;
@@ -31,6 +33,8 @@
                 color: #e7e5e4;
                 overflow-x: hidden;
             }
+
+            /* --- GESTION DES FONDS (IMAGES) --- */
             .bg-layer {
                 position: fixed;
                 top: 0;
@@ -43,10 +47,13 @@
                 transition: opacity 0.3s ease-in-out;
                 filter: grayscale(100%) brightness(40%) contrast(110%);
             }
+
             #bg-mort {
                 filter: grayscale(20%) brightness(95%) contrast(120%) sepia(30%)
                     hue-rotate(-40deg) !important;
             }
+
+            /* --- LE CALQUE D'AMBIANCE (VIGNETTE) --- */
             .vignette-overlay {
                 position: fixed;
                 top: 0;
@@ -61,6 +68,8 @@
                     rgba(12, 10, 9, 0.95) 85%
                 );
             }
+
+            /* Classes utilitaires pour la visibilité */
             .bg-visible {
                 opacity: 1 !important;
             }
@@ -70,6 +79,8 @@
             .hidden {
                 display: none !important;
             }
+
+            /* Styles de textes */
             h1,
             h2,
             h3,
@@ -78,10 +89,13 @@
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
             }
+
             .font-title {
                 font-family: "Crusades", sans-serif;
                 letter-spacing: 0.05em;
             }
+
+            /* Styles des panneaux et boutons */
             .stone-panel,
             .modal-content {
                 background-color: rgba(28, 25, 23, 0.9);
@@ -89,11 +103,13 @@
                 box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.8);
                 backdrop-filter: blur(4px);
             }
+
             .card-hover:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
                 border-color: #a8a29e;
             }
+
             @keyframes fadeIn {
                 from {
                     opacity: 0;
@@ -105,6 +121,8 @@
             .animate-fade-in {
                 animation: fadeIn 0.5s ease-out forwards;
             }
+
+            /* --- NOUVEAU : STYLES POUR LES MODALES ET FORMULAIRES --- */
             .modal-overlay {
                 position: fixed;
                 top: 0;
@@ -135,7 +153,7 @@
                 font-family: "Cinzel", serif;
             }
             input.gothic-input:focus {
-                border-color: #d97706;
+                border-color: #d97706; /* Amber */
                 outline: none;
             }
             .auth-error {
@@ -143,6 +161,7 @@
                 margin-bottom: 1rem;
                 font-size: 0.9rem;
             }
+
             /* Styles pour le leaderboard */
             .leaderboard-list {
                 text-align: left;
@@ -181,7 +200,9 @@
             style="background-image: url('/images/mort.png');"
         >
         </div>
+
         <div class="vignette-overlay"></div>
+
         <div
             id="auth-widget"
             class="fixed top-4 right-4 z-50 stone-panel p-2 rounded cursor-pointer hover:border-amber-600 transition-colors flex items-center gap-2"
@@ -194,78 +215,84 @@
 
         <div id="login-modal" class="modal-overlay hidden">
             <div class="modal-content animate-fade-in">
-                <h3 class="text-2xl mb-6 text-amber-600">Connexion</h3><div
-                    id="login-error"
-                    class="auth-error"
-                >
-                </div><form id="login-form">
+                <h3 class="text-2xl mb-6 text-amber-600">Connexion</h3>
+                <div id="login-error" class="auth-error"></div>
+                <form id="login-form">
                     <input
                         type="text"
                         name="username"
                         placeholder="Pseudo"
                         class="gothic-input"
                         required
-                    /><input
+                    />
+                    <input
                         type="password"
                         name="password"
                         placeholder="Mot de passe"
                         class="gothic-input"
                         required
-                    /><button
+                    />
+                    <button
                         type="submit"
                         class="font-gothic px-6 py-2 bg-amber-900/80 border-2 border-amber-700 text-amber-100 hover:bg-amber-800 w-full mb-4"
                         >Se connecter</button
                     >
-                </form><p class="text-sm text-stone-400">
+                </form>
+                <p class="text-sm text-stone-400">
                     Pas de compte ? <button
                         id="btn-show-register"
                         class="text-amber-500 hover:underline"
                         >S'inscrire</button
                     >
-                </p><button
+                </p>
+                <button
                     class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
                     >X</button
                 >
             </div>
         </div>
+
         <div id="register-modal" class="modal-overlay hidden">
             <div class="modal-content animate-fade-in">
-                <h3 class="text-2xl mb-6 text-amber-600">Inscription</h3><div
-                    id="register-error"
-                    class="auth-error"
-                >
-                </div><form id="register-form">
+                <h3 class="text-2xl mb-6 text-amber-600">Inscription</h3>
+                <div id="register-error" class="auth-error"></div>
+                <form id="register-form">
                     <input
                         type="text"
                         name="username"
                         placeholder="Pseudo"
                         class="gothic-input"
                         required
-                    /><input
+                    />
+                    <input
                         type="email"
                         name="email"
                         placeholder="Email"
                         class="gothic-input"
                         required
-                    /><input
+                    />
+                    <input
                         type="password"
                         name="password"
                         placeholder="Mot de passe (min 6 chars)"
                         class="gothic-input"
                         required
                         minlength="6"
-                    /><button
+                    />
+                    <button
                         type="submit"
                         class="font-gothic px-6 py-2 bg-amber-900/80 border-2 border-amber-700 text-amber-100 hover:bg-amber-800 w-full mb-4"
                         >Créer le compte</button
                     >
-                </form><p class="text-sm text-stone-400">
+                </form>
+                <p class="text-sm text-stone-400">
                     Déjà un compte ? <button
                         id="btn-show-login"
                         class="text-amber-500 hover:underline"
                         >Se connecter</button
                     >
-                </p><button
+                </p>
+                <button
                     class="modal-close absolute top-4 right-4 text-stone-500 hover:text-white"
                     >X</button
                 >
@@ -303,75 +330,94 @@
             import { Game } from "../game/Game.js";
             import { connectGameToUI } from "../gameConnector.js";
             import { uiStore } from "../store.js";
+            // NOUVEAUX IMPORTS
             import {
                 authStore,
                 initAuth,
                 loginSuccess,
                 logout,
             } from "../authStore.js";
-            // Import des nouvelles fonctions d'API
             import {
                 loginUser,
                 registerUser,
                 saveScoreApi,
                 getLeaderboardApi,
+                getMyProgressApi,
+                claimRewardApi,
             } from "../api.js";
 
             // --- INITIALISATION ---
             const game = new Game();
             connectGameToUI();
-            initAuth();
+            initAuth(); // Vérifie si on est déjà connecté au chargement
+
             console.log("--- DÉMARRAGE DU DONJON ---");
             game.init();
 
             window.game = game;
             window.uiStore = uiStore;
+            // On expose authStore pour le débug si besoin
             window.authStore = authStore;
 
-            // --- FONCTION CREATE CARD HTML (Inchangée - Je la compresse pour gagner de la place) ---
-            function createCardHTML(c) {
-                let i = "❓",
-                    s = "",
-                    bc = "border-stone-600 bg-stone-900/80",
-                    ic = "text-stone-400",
-                    vc = "text-stone-100",
-                    v = c.effects[0].value;
-                switch (c.type) {
+            // --- FONCTIONS UTILITAIRES POUR LES CARTES (Inchangé) ---
+            function createCardHTML(card) {
+                let icon = "❓";
+                let stats = "";
+                let borderColor = "border-stone-600 bg-stone-900/80";
+                let iconColor = "text-stone-400";
+                let valueColor = "text-stone-100";
+
+                const firstEffect = card.effects[0];
+                let value = firstEffect.value;
+
+                switch (card.type) {
                     case "monster":
-                        i = "👹";
-                        bc =
+                        icon = "👹";
+                        borderColor =
                             "border-red-900/60 bg-gradient-to-b from-stone-900/90 to-red-950/90";
-                        ic = "text-red-700";
-                        vc = "text-red-500";
-                        s = `ATK <span class="font-gothic text-3xl ${vc}">${v}</span>`;
+                        iconColor = "text-red-700";
+                        valueColor = "text-red-500";
+                        stats = `ATK <span class="font-gothic text-3xl ${valueColor}">${value}</span>`;
                         break;
                     case "weapon":
-                        i = "⚔️";
-                        bc =
+                        icon = "⚔️";
+                        borderColor =
                             "border-slate-700 bg-gradient-to-b from-stone-900/90 to-slate-900/90";
-                        ic = "text-slate-400";
-                        vc = "text-blue-400";
-                        s = `PWR <span class="font-gothic text-3xl ${vc}">${v.power}</span>`;
+                        iconColor = "text-slate-400";
+                        valueColor = "text-blue-400";
+                        stats = `PWR <span class="font-gothic text-3xl ${valueColor}">${value.power}</span>`;
                         break;
                     case "potion":
-                        i = "⚗️";
-                        bc =
+                        icon = "⚗️";
+                        borderColor =
                             "border-emerald-900/60 bg-gradient-to-b from-stone-900/90 to-emerald-950/90";
-                        ic = "text-emerald-600";
-                        vc = "text-emerald-400";
-                        s = `HEAL <span class="font-gothic text-3xl ${vc}">${v}</span>`;
+                        iconColor = "text-emerald-600";
+                        valueColor = "text-emerald-400";
+                        stats = `HEAL <span class="font-gothic text-3xl ${valueColor}">${value}</span>`;
                         break;
                 }
-                return `<div class="${bc} w-40 h-60 border-[3px] rounded-md flex flex-col items-center p-2 transition-all duration-300 cursor-pointer shadow-lg relative group select-none backdrop-blur-sm"><div class="text-sm font-bold text-center h-10 flex items-center justify-center w-full border-b border-white/10 font-gothic text-stone-300">${c.name}</div><div class="flex-grow flex items-center justify-center text-6xl drop-shadow-md ${ic} opacity-90 group-hover:scale-110 transition-transform">${i}</div><div class="w-full border-t border-white/10 pt-2 text-center text-xs uppercase tracking-widest text-stone-400">${s}</div><div class="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors rounded-md"></div></div>`;
+
+                return `
+              <div class="${borderColor} w-40 h-60 border-[3px] rounded-md flex flex-col items-center p-2 transition-all duration-300 cursor-pointer shadow-lg relative group select-none backdrop-blur-sm">
+                <div class="text-sm font-bold text-center h-10 flex items-center justify-center w-full border-b border-white/10 font-gothic text-stone-300">
+                    ${card.name}
+                </div>
+                <div class="flex-grow flex items-center justify-center text-6xl drop-shadow-md ${iconColor} opacity-90 group-hover:scale-110 transition-transform">
+                    ${icon}
+                </div>
+                <div class="w-full border-t border-white/10 pt-2 text-center text-xs uppercase tracking-widest text-stone-400">
+                    ${stats}
+                </div>
+                <div class="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors rounded-md"></div>
+              </div>
+            `;
             }
 
-            // --- LOGIQUE UI (Modales, Auth, Leaderboard) ---
+            // --- LOGIQUE D'AUTHENTIFICATION UI ---
             const authWidget = document.getElementById("auth-widget");
             const authStatusText = document.getElementById("auth-status-text");
             const loginModal = document.getElementById("login-modal");
             const registerModal = document.getElementById("register-modal");
-            const leaderboardModal =
-                document.getElementById("leaderboardModal"); // Correction ID
             const loginForm = document.getElementById("login-form");
             const registerForm = document.getElementById("register-form");
             const loginError = document.getElementById("login-error");
@@ -383,7 +429,7 @@
                 "leaderboard-loading",
             );
 
-            // Gestion des modales
+            // Fonctions pour ouvrir/fermer les modales
             window.closeModals = () => {
                 loginModal.classList.add("hidden");
                 registerModal.classList.add("hidden");
@@ -431,12 +477,16 @@
                 }
             };
 
-            // Event Listeners UI
+            // Event Listeners pour les interactions UI
             authWidget.addEventListener("click", () => {
-                authStore.get().user
-                    ? confirm("Se déconnecter ?") && logout()
-                    : window.showLoginModal();
+                if (authStore.get().user) {
+                    // Si connecté, clic = déconnexion (pour l'instant)
+                    if (confirm("Se déconnecter ?")) logout();
+                } else {
+                    window.showLoginModal();
+                }
             });
+
             document
                 .querySelectorAll(".modal-close")
                 .forEach((btn) =>
@@ -449,80 +499,121 @@
                 .getElementById("btn-show-login")
                 .addEventListener("click", window.showLoginModal);
 
-            // Forms Auth (Inchangé)
+            // --- LOGIQUE AUTH ---
+            // On modifie loginSuccess pour charger la progression dès qu'on se connecte
+            window.handleLoginSuccess = async (token, username) => {
+                loginSuccess(token, username);
+                window.closeModals();
+                // NOUVEAU : Charger la progression
+                await loadPlayerProgress();
+            };
+
+            // NOUVELLE FONCTION : Charger la progression depuis le back
+            async function loadPlayerProgress() {
+                if (!authStore.get().user) return;
+                try {
+                    console.log("Chargement de la progression...");
+                    const progress = await getMyProgressApi();
+
+                    window.game.setPermanentMaxHealth(
+                        progress.progression.max_health,
+                    );
+                    console.log(
+                        `Progression chargée : ${progress.progression.max_health} PV Max`,
+                    );
+                } catch (e) {
+                    console.error("Erreur chargement progression", e);
+                }
+            }
+
+            // Gestion du Login
             loginForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                loginError.textContent = "Connexion...";
-                const fd = new FormData(loginForm);
+                loginError.textContent = "Connexion en cours...";
+                const formData = new FormData(loginForm);
                 try {
-                    const d = await loginUser(
-                        fd.get("username"),
-                        fd.get("password"),
+                    const data = await loginUser(
+                        formData.get("username"),
+                        formData.get("password"),
                     );
-                    loginSuccess(d.access_token, fd.get("username"));
-                    window.closeModals();
+                    // Succès ! On utilise la nouvelle fonction handleLoginSuccess
+                    window.handleLoginSuccess(
+                        data.access_token,
+                        formData.get("username"),
+                    );
                     loginForm.reset();
-                } catch (err) {
-                    loginError.textContent = err.message;
-                }
-            });
-            registerForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                registerError.textContent = "Création...";
-                const fd = new FormData(registerForm);
-                try {
-                    await registerUser(
-                        fd.get("username"),
-                        fd.get("email"),
-                        fd.get("password"),
-                    );
-                    const d = await loginUser(
-                        fd.get("username"),
-                        fd.get("password"),
-                    );
-                    loginSuccess(d.access_token, fd.get("username"));
-                    window.closeModals();
-                    registerForm.reset();
-                    alert("Compte créé !");
-                } catch (err) {
-                    registerError.textContent = err.message;
+                } catch (error) {
+                    loginError.textContent = error.message;
                 }
             });
 
+            // Gestion de l'Inscription
+            registerForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                registerError.textContent = "Création en cours...";
+                const formData = new FormData(registerForm);
+                try {
+                    // Inscription réussie
+                    await registerUser(
+                        formData.get("username"),
+                        formData.get("email"),
+                        formData.get("password"),
+                    );
+                    // On connecte automatiquement après inscription
+                    const data = await loginUser(
+                        formData.get("username"),
+                        formData.get("password"),
+                    );
+                    window.handleLoginSuccess(
+                        data.access_token,
+                        formData.get("username"),
+                    );
+                    registerForm.reset();
+                    alert(
+                        "Compte créé avec succès ! Bienvenue dans le donjon.",
+                    );
+                } catch (error) {
+                    registerError.textContent = error.message;
+                }
+            });
+
+            // Mise à jour du widget en fonction de l'état du store
             authStore.subscribe((state) => {
                 if (state.user) {
                     authStatusText.textContent = `👤 ${state.user.username}`;
-                    authStatusText.classList.replace(
-                        "text-amber-500",
-                        "text-emerald-400",
-                    );
+                    authStatusText.classList.remove("text-amber-500");
+                    authStatusText.classList.add("text-emerald-400");
                 } else {
                     authStatusText.textContent = `Login / Inscription`;
-                    authStatusText.classList.replace(
-                        "text-emerald-400",
-                        "text-amber-500",
-                    );
+                    authStatusText.classList.remove("text-emerald-400");
+                    authStatusText.classList.add("text-amber-500");
                 }
             });
 
-            // --- GAME CLIENT ---
+            // NOUVEAU : Si on est déjà connecté au chargement de la page, on charge la progression
+            if (authStore.get().user) {
+                loadPlayerProgress();
+            }
+
+            // --- WEB COMPONENT DU JEU (Modifié pour gérer l'auth) ---
             class GameClient extends HTMLElement {
                 constructor() {
                     super();
                     this.bgDoor = document.getElementById("bg-door");
                     this.bgHall = document.getElementById("bg-hall");
                     this.bgMort = document.getElementById("bg-mort");
-                    this.hasSavedScore = false; // Pour éviter de sauvegarder 50 fois le même score
+                    this.hasSavedScore = false;
+                    this.hasClaimedReward = false; // NOUVEAU FLAG pour la récompense
 
+                    // On s'abonne aux DEUX stores maintenant
                     this.unsubscribeUI = uiStore.subscribe(($store) => {
                         this.updateBackground($store.currentScreen);
-                        this.handleAutoSave($store, authStore.get()); // NOUVEAU : Check sauvegarde auto
+                        // On passe aussi l'état d'auth au render
                         this.render($store, authStore.get());
                     });
                     this.unsubscribeAuth = authStore.subscribe(($auth) => {
-                        // Si on se connecte sur l'écran de game over, on tente une sauvegarde
-                        if (uiStore.get().currentScreen === "GameOver")
-                            this.handleAutoSave(uiStore.get(), $auth);
+                        // Si l'auth change, on re-rend le jeu aussi
+                        this.handleGameOverProcesses(uiStore.get(), $auth);
                         this.render(uiStore.get(), $auth);
                     });
                 }
@@ -532,72 +623,99 @@
                     this.unsubscribeAuth();
                 }
 
-                // NOUVEAU : Gestion de la sauvegarde automatique
-                async handleAutoSave($store, $auth) {
-                    // Si c'est Game Over, qu'on est connecté, et qu'on n'a pas encore sauvegardé cette partie
-                    if (
-                        $store.currentScreen === "GameOver" &&
-                        $auth.user &&
-                        !this.hasSavedScore &&
-                        $store.finalScore > 0
-                    ) {
-                        this.hasSavedScore = true; // On marque comme sauvegardé tout de suite
-                        console.log(
-                            "Tentative de sauvegarde automatique du score...",
-                        );
+                // NOUVEAU : Gestion complète de la fin de partie (Sauvegarde + Récompense)
+                async handleGameOverProcesses($store, $auth) {
+                    if ($store.currentScreen !== "GameOver" || !$auth.user) {
+                        // Reset des flags si on quitte l'écran
+                        if ($store.currentScreen !== "GameOver") {
+                            this.hasSavedScore = false;
+                            this.hasClaimedReward = false;
+                            this.rewardMessage = null; // Pour stocker le message à afficher
+                        }
+                        return;
+                    }
+
+                    // 1. Sauvegarde du score (Si pas déjà fait et score > 0)
+                    if (!this.hasSavedScore && $store.finalScore > 0) {
+                        this.hasSavedScore = true;
                         try {
                             await saveScoreApi($store.finalScore, $store.level);
-                            console.log("Score sauvegardé avec succès !");
-                            // On force un re-rendu pour afficher le message de succès
-                            this.render($store, $auth);
+                            console.log("Score sauvegardé.");
                         } catch (e) {
-                            console.error("Erreur sauvegarde auto :", e);
-                            this.hasSavedScore = false; // On autorise à retenter si ça a échoué
+                            console.error("Erreur score:", e);
                         }
                     }
-                    // Reset du flag quand on quitte l'écran de game over
-                    if ($store.currentScreen !== "GameOver") {
-                        this.hasSavedScore = false;
+
+                    // 2. Réclamation de la récompense (Si pas déjà fait)
+                    if (!this.hasClaimedReward) {
+                        this.hasClaimedReward = true;
+                        this.rewardMessage = "Ouverture du coffre..."; // Message temporaire
+                        this.render($store, $auth); // Force le rendu pour afficher le message
+
+                        try {
+                            console.log("Réclamation de la récompense...");
+                            const reward = await claimRewardApi();
+                            this.rewardMessage = `🎁 ${reward.message}`;
+                            console.log("Récompense obtenue :", reward);
+
+                            // Recharger la progression pour la prochaine partie
+                            await loadPlayerProgress();
+                        } catch (e) {
+                            console.error("Erreur récompense:", e);
+                            this.rewardMessage =
+                                "Impossible d'obtenir la récompense.";
+                            this.hasClaimedReward = false; // Autorise à réessayer
+                        }
+                        this.render($store, $auth); // Force le rendu final
                     }
                 }
 
-                updateBackground(s) {
-                    const v = (e, b) => {
-                        e.classList.toggle("bg-visible", b);
-                        e.classList.toggle("bg-hidden", !b);
+                // ... (updateBackground est inchangé) ...
+                updateBackground(screen) {
+                    const setVisibility = (element, makeVisible) => {
+                        if (makeVisible) {
+                            element.classList.remove("bg-hidden");
+                            element.classList.add("bg-visible");
+                        } else {
+                            element.classList.remove("bg-visible");
+                            element.classList.add("bg-hidden");
+                        }
                     };
-                    if (s === "GameOver") {
-                        v(this.bgDoor, 0);
-                        v(this.bgHall, 0);
-                        v(this.bgMort, 1);
-                    } else if (["MainMenu", "ClassSelection"].includes(s)) {
-                        v(this.bgDoor, 1);
-                        v(this.bgHall, 0);
-                        v(this.bgMort, 0);
+                    if (screen === "GameOver") {
+                        setVisibility(this.bgDoor, false);
+                        setVisibility(this.bgHall, false);
+                        setVisibility(this.bgMort, true);
+                    } else if (
+                        ["MainMenu", "ClassSelection"].includes(screen)
+                    ) {
+                        setVisibility(this.bgDoor, true);
+                        setVisibility(this.bgHall, false);
+                        setVisibility(this.bgMort, false);
                     } else {
-                        v(this.bgDoor, 0);
-                        v(this.bgHall, 1);
-                        v(this.bgMort, 0);
+                        setVisibility(this.bgDoor, false);
+                        setVisibility(this.bgHall, true);
+                        setVisibility(this.bgMort, false);
                     }
                 }
 
+                // ✅ MODIFICATION : render prend maintenant $auth en argument
                 render($store, $auth) {
-                    // ... (constantes de style inchangées) ...
                     const showMainMenu =
-                            $store.currentScreen === "MainMenu" ? "" : "hidden",
-                        showClassSelect =
-                            $store.currentScreen === "ClassSelection"
-                                ? ""
-                                : "hidden",
-                        showGameOver =
-                            $store.currentScreen === "GameOver" ? "" : "hidden",
-                        showGameContainer = ![
-                            "MainMenu",
-                            "ClassSelection",
-                            "GameOver",
-                        ].includes($store.currentScreen)
+                        $store.currentScreen === "MainMenu" ? "" : "hidden";
+                    const showClassSelect =
+                        $store.currentScreen === "ClassSelection"
                             ? ""
                             : "hidden";
+                    const showGameOver =
+                        $store.currentScreen === "GameOver" ? "" : "hidden";
+                    const showGameContainer = ![
+                        "MainMenu",
+                        "ClassSelection",
+                        "GameOver",
+                    ].includes($store.currentScreen)
+                        ? ""
+                        : "hidden";
+
                     const btnStyle =
                         "font-gothic px-8 py-3 bg-stone-800/90 border-2 border-stone-600 text-stone-300 text-xl hover:bg-stone-700 hover:border-stone-400 hover:text-white transition-all shadow-lg active:transform active:scale-95 cursor-pointer backdrop-blur-sm";
                     const btnDanger =
@@ -605,12 +723,19 @@
                     const btnSafe =
                         "font-gothic px-6 py-2 bg-emerald-950/80 border-2 border-emerald-800 text-emerald-200 hover:bg-emerald-900 hover:text-white transition-all cursor-pointer backdrop-blur-sm";
 
-                    // Logique Game Over mise à jour
+                    // Logique Game Over mise à jour pour afficher la récompense
                     let gameOverHtml = "";
                     if ($auth.user) {
+                        // Si on a un message de récompense, on l'affiche
+                        const rewardHtml = this.rewardMessage
+                            ? `<div class="mt-4 p-4 bg-amber-900/40 border border-amber-700 rounded animate-fade-in">
+                                <p class="text-amber-200 font-gothic text-lg">${this.rewardMessage}</p>
+                            </div>`
+                            : "";
+
                         gameOverHtml = this.hasSavedScore
-                            ? `<p class="text-emerald-500 mb-4 font-gothic text-sm animate-pulse">Score enregistré dans les annales !</p>`
-                            : `<p class="text-stone-500 mb-4 font-gothic text-sm">Sauvegarde en cours...</p>`;
+                            ? `<p class="text-emerald-500 mb-4 font-gothic text-sm">Score enregistré dans les annales !</p>${rewardHtml}`
+                            : `<p class="text-stone-500 mb-4 font-gothic text-sm animate-pulse">Traitement de fin de partie...</p>`;
                     } else {
                         gameOverHtml = `<p class="text-amber-500 mb-4 font-gothic text-sm">Connectez-vous pour sauvegarder !</p>
                             <div class="flex gap-4 justify-center"><button class="${btnStyle} border-amber-600 text-amber-200" onclick="window.showLoginModal()">Se connecter</button></div>`;
@@ -621,7 +746,7 @@
                         <h1 class="font-title text-7xl md:text-8xl mb-4 text-stone-200 drop-shadow-2xl tracking-wide">SCOUNDREL</h1>
                         <div class="w-32 h-1 bg-stone-700 mx-auto mb-12"></div>
                         <p class="text-xl text-stone-300 mb-12 italic drop-shadow-md">"Oserez-vous franchir le seuil ?"</p>
-                        <div class="flex flex-col gap-4 items-center">
+                         <div class="flex flex-col gap-4 items-center">
                             <button class="${btnStyle} text-2xl px-12 py-4 border-4 double" onclick="window.game.currentState.onStartGame()">Entrer dans le Donjon</button>
                             <button class="${btnStyle} text-lg px-8 py-2 border-amber-800 text-amber-500" onclick="window.showLeaderboardModal()">Voir le Classement 🏆</button>
                         </div>
@@ -629,7 +754,22 @@
 
                     <div id="class-selection-screen" class="${showClassSelect} text-center p-8 w-full max-w-4xl">
                         <h1 class="text-4xl mb-8 text-stone-200 font-gothic drop-shadow-lg">Choisissez votre Destinée</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">${$store.classChoices.map((c) => `<button class="p-6 bg-stone-900/80 border-2 border-stone-700 text-left hover:border-amber-600 hover:bg-stone-800/90 transition-all group relative overflow-hidden cursor-pointer backdrop-blur-md" onclick="window.game.currentState.onSelectClass('${c.id}')"><div class="absolute top-0 left-0 w-1 h-full bg-stone-700 group-hover:bg-amber-600 transition-colors"></div><div class="pl-4"><div class="text-2xl font-gothic text-amber-500 mb-2">${c.name}</div><div class="text-stone-300 text-sm leading-relaxed">${c.description}</div></div></button>`).join("")}</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             ${$store.classChoices
+                                 .map(
+                                     (classDef) => `
+                                <button class="p-6 bg-stone-900/80 border-2 border-stone-700 text-left hover:border-amber-600 hover:bg-stone-800/90 transition-all group relative overflow-hidden cursor-pointer backdrop-blur-md"
+                                        onclick="window.game.currentState.onSelectClass('${classDef.id}')">
+                                    <div class="absolute top-0 left-0 w-1 h-full bg-stone-700 group-hover:bg-amber-600 transition-colors"></div>
+                                    <div class="pl-4">
+                                        <div class="text-2xl font-gothic text-amber-500 mb-2">${classDef.name}</div>
+                                        <div class="text-stone-300 text-sm leading-relaxed">${classDef.description}</div>
+                                    </div>
+                                </button>
+                            `,
+                                 )
+                                 .join("")}
+                        </div>
                     </div>
 
                     <div id="game-over-screen" class="${showGameOver} fixed inset-0 z-50 flex flex-col items-center justify-center text-center animate-fade-in backdrop-blur-sm">
@@ -640,20 +780,51 @@
                             <span class="text-5xl text-amber-600 font-title mt-2 block">${$store.finalScore}</span>
                         </div>
                         ${gameOverHtml}
-                        <button class="${btnStyle} mt-8" onclick="window.game.currentState.onRestartGame()">Tenter une nouvelle vie</button>
+                          <button class="${btnStyle} mt-8" onclick="window.game.currentState.onRestartGame()">Tenter une nouvelle vie</button>
                     </div>
                     
                     <div id="game-container" class="${showGameContainer} w-full max-w-5xl">
                         <div class="stone-panel p-4 mb-8 flex flex-col md:flex-row justify-between items-center rounded-sm border-y-4 border-x-0 md:border-4 md:rounded-lg gap-4">
-                            <div class="flex items-center gap-6"><div class="text-center"><div class="text-xs text-stone-500 uppercase tracking-wider">Santé</div><div class="text-3xl font-gothic text-red-500 drop-shadow-sm">${$store.health} <span class="text-stone-600 text-lg">/ ${$store.maxHealth}</span></div></div><div class="w-px h-10 bg-stone-700 hidden md:block"></div><div class="text-center"><div class="text-xs text-stone-500 uppercase tracking-wider">Arme</div><div class="text-xl font-gothic ${$store.weapon ? "text-blue-400" : "text-stone-600"}">${$store.weapon ? `${$store.weapon.name} (${$store.weapon.power})` : "Mains nues"}</div></div></div>
-                            <div class="flex gap-6"><div class="text-right"><div class="text-xs text-stone-500 uppercase">Score</div><div class="text-2xl font-gothic text-amber-500">${$store.score}</div></div><div class="text-right"><div class="text-xs text-stone-500 uppercase">Salle</div><div class="text-2xl font-gothic text-purple-400">${$store.level}</div></div></div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-center">
+                                    <div class="text-xs text-stone-500 uppercase tracking-wider">Santé</div>
+                                    <div class="text-3xl font-gothic text-red-500 drop-shadow-sm">
+                                        ${$store.health} <span class="text-stone-600 text-lg">/ ${$store.maxHealth}</span>
+                                    </div>
+                                </div>
+                                <div class="w-px h-10 bg-stone-700 hidden md:block"></div>
+                                <div class="text-center">
+                                    <div class="text-xs text-stone-500 uppercase tracking-wider">Arme</div>
+                                    <div class="text-xl font-gothic ${$store.weapon ? "text-blue-400" : "text-stone-600"}">
+                                        ${$store.weapon ? `${$store.weapon.name} (${$store.weapon.power})` : "Mains nues"}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="text-right">
+                                    <div class="text-xs text-stone-500 uppercase">Score</div>
+                                    <div class="text-2xl font-gothic text-amber-500">${$store.score}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs text-stone-500 uppercase">Salle</div>
+                                    <div class="text-2xl font-gothic text-purple-400">${$store.level}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="min-h-[350px] flex items-center justify-center"><div class="flex flex-wrap justify-center gap-6 perspective-1000">${this.renderRoom($store)}</div></div>
-                        <div class="mt-12 h-24 flex items-center justify-center gap-4">${this.renderActions($store, btnDanger, btnSafe)}</div>
+                        
+                        <div class="min-h-[350px] flex items-center justify-center">
+                            <div class="flex flex-wrap justify-center gap-6 perspective-1000">
+                                ${this.renderRoom($store)}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 h-24 flex items-center justify-center gap-4">
+                             ${this.renderActions($store, btnDanger, btnSafe)}
+                        </div>
                     </div>
                 `;
                 }
-                // (renderRoom et renderActions sont compressés mais présents)
+                // ... (renderRoom et renderActions sont inchangés, je ne les remets pas pour gagner de la place mais ils doivent être là !) ...
                 renderRoom($store) {
                     if (
                         $store.currentScreen === "WeaponDecision" &&

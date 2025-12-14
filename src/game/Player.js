@@ -4,8 +4,8 @@ import { Weapon } from './Weapon.js';
 
 export class Player {
   constructor() {
-    this.health = 1;
-    this.maxHealth = 100;
+    this.health = 20;
+    this.maxHealth = 20;
     this.weapon = null;
     this.passives = [];
     this.acquiredUpgradeIds = new Set();

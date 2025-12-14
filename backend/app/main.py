@@ -26,7 +26,6 @@ app.add_middleware(
 
 # --- Inclusion des routes ---
 app.include_router(users.router)
-# ✅ CORRECTION 2 : Inclure le routeur des scores
 app.include_router(scores.router) 
 
 # --- Événement de démarrage ---

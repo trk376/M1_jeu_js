@@ -1,10 +1,15 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
+from typing import Dict, List
 
 # Schéma de base pour un utilisateur
 class UserBase(BaseModel):
     username: str
     email: EmailStr
+
+class PlayerProgression(BaseModel):
+    max_health: int = 20
+    unlocked_classes: List[str] = []
 
 # Schéma pour la création (ce que le front envoie pour s'inscrire)
 class UserCreate(UserBase):
@@ -13,9 +18,12 @@ class UserCreate(UserBase):
 # Schéma pour la lecture (ce que l'API renvoie, SANS le mot de passe !)
 class UserOut(UserBase):
     id: int
+    progression: PlayerProgression
     # On active le mode ORM pour que Pydantic sache lire le modèle SQLAlchemy
     class Config:
         from_attributes = True
+
+
 
 # Schéma pour le Token JWT retourné après login
 class Token(BaseModel):
