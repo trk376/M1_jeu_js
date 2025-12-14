@@ -1,16 +1,12 @@
-# backend/app/main.py
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import users, scores 
+from app.routers import users, scores, progress # <-- AJOUT DE PROGRESS DANS L'IMPORT
 from app.database import engine, Base
-from app.models import User , Score
 
 # --- Initialisation de l'App ---
 app = FastAPI(title="Dungeon API")
 
 # --- Configuration CORS ---
-# Liste des origines autorisées (l'URL de ton front Astro en dev)
 origins = [
     "http://localhost:4321",
     "http://127.0.0.1:4321",
@@ -27,13 +23,13 @@ app.add_middleware(
 # --- Inclusion des routes ---
 app.include_router(users.router)
 app.include_router(scores.router) 
+app.include_router(progress.router) # <-- AJOUT DE CETTE LIGNE OBLIGATOIRE
 
 # --- Événement de démarrage ---
 @app.on_event("startup")
 async def startup():
     async with engine.begin() as conn:
-        # await conn.run_sync(Base.metadata.drop_all) # RESET COMPLET
-        # Cette ligne crée les tables si elles n'existent pas (utile pour la nouvelle table scores)
+        # Cette ligne crée les tables si elles n'existent pas
         await conn.run_sync(Base.metadata.create_all)
 
 @app.get("/")

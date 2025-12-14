@@ -1,41 +1,33 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-# Schéma de base pour un utilisateur
 class UserBase(BaseModel):
     username: str
     email: EmailStr
 
 class PlayerProgression(BaseModel):
     max_health: int = 20
+    souls: int = 0  # <--- Ajouté
     unlocked_classes: List[str] = []
 
-# Schéma pour la création (ce que le front envoie pour s'inscrire)
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=6,max_length=70)
+    password: str = Field(..., min_length=6, max_length=70)
 
-# Schéma pour la lecture (ce que l'API renvoie, SANS le mot de passe !)
 class UserOut(UserBase):
     id: int
     progression: PlayerProgression
-    # On active le mode ORM pour que Pydantic sache lire le modèle SQLAlchemy
     class Config:
         from_attributes = True
 
-
-
-# Schéma pour le Token JWT retourné après login
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class ScoreCreate(BaseModel):
-    score_value: int = Field(..., ge=0) # ge=0 : doit être positif
+    score_value: int = Field(..., ge=0)
     level_reached: int = Field(..., ge=1)
 
-# Ce que l'API renvoie pour le leaderboard (on veut le score ET le pseudo du joueur)
-# On crée un petit schéma juste pour le pseudo
 class UserSnippet(BaseModel):
     username: str
     class Config:
@@ -46,7 +38,20 @@ class ScoreOut(BaseModel):
     score_value: int
     level_reached: int
     created_at: datetime
-    owner: UserSnippet # On inclut le pseudo ici
-
+    owner: UserSnippet 
     class Config:
         from_attributes = True
+
+# --- POUR LE SYSTÈME DE REWARD ---
+class RewardInput(BaseModel):
+    score: int
+    level: int
+
+class RewardOut(BaseModel):
+    souls_earned: int
+    total_souls: int
+    message: str
+
+# --- POUR LE SHOP (Achat de Classe) ---
+class BuyClassInput(BaseModel):
+    class_id: str

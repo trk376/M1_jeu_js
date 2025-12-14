@@ -1,29 +1,23 @@
 import { map } from 'nanostores';
 
- 
- 
 export const uiStore = map({
-     
-    currentScreen: 'MainMenu', 
-    
-     
+    currentScreen: 'MainMenu',
+
     health: 0,
-    maxHealth: 100,
+    maxHealth: 20,
+    souls: 0, // <-- Le compteur d'âmes
+    unlockedClasses: [], // <-- Pour le shop
+
     score: 0,
     level: 1,
-    weapon: null,        
-    
-     
-    roomCards: [],       
+    weapon: null,
+
+    roomCards: [],
     roomPicksLeft: 0,
-    
-     
-    weaponDecision: null,  
-    classChoices: [],      
-    
-     
+
+    weaponDecision: null,
+    classChoices: [],
+
     finalScore: 0,
-    
-     
     isFleeDisabled: false,
 });
